@@ -9,6 +9,6 @@ def extract_text_from_pdf(pdf_path):
             text += page.extract_text()
     return text
 
-pdf_path = "path/to/your/file.pdf"
+pdf_path = "./solid.pdf"
 extracted_text = extract_text_from_pdf(pdf_path)
 print(extracted_text)

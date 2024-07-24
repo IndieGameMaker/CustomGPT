@@ -1,0 +1,836 @@
+
+All right I'm on the hour now so welcome to Unity Solid and hopefully I don't end up disconnecting the video while we're in the middle of running this but I'd like to be able to walk around a little bit.
+So this is a presentation on Unity Solid.
+And so what is that Solid is a set of five principles for programming that you can apply to just about any language, especially any object oriented language.
+Move that a bit
+
+but I do want to make a clarification.
+This one is not just about so solid development which by the way, it helps you build larger programs and make them more manageable over time.
+What I really want to end up getting to by the end of this is talking about dependency injection and unit testing through Visual Studio where we're talking about test cases taking milliseconds instead of minutes.
+All right so first on the presentation, I'm Dan Violet Sagmiller this guy, not the cat.
+
+One of the things if you've seen some of my stuff before or if you haven't on LinkedIn Learning or Linda Com, there is a real time strategy game in Unity that you can learn how to build in about four hours with artificial, intelligent enemies, explosions, battles, tectories, resources.
+It's a lot of fun. I'm also Microsoft MVP particularly for my work in Unity.
+And I also have a couple of books out the latest on Unity AI and then also on,
+
+I have meeting reminders as well.
+Also a book on X and A in Sea Sharp and that one's out and available for free.
+All right and right now I'm working for a company called Productive Edge, which is pretty awesome because since I joined there everything has been Unity 3d.
+So it's just been phenomenal.
+If you want to find out more, ask me after all right so you didn't come here to learn about me you came here to learn about Bob.
+So we'll find out what Bob is doing in a little bit.
+
+We're also going to be talking about Solid and the order is a lie.
+A lot of people try to present this following in order but when I was trying to review this to come up with the best way to convey it, I found that changing the order of it actually helped out a lot.
+So we'll be going out of order and then finally we'll be getting to dependency injection and unit testing.
+
+And when I was running test runs on this presentation, it was going anywhere from 50 minutes to an hour and five minutes.
+So I'm hoping to get keep this closer to 50 minutes.
+This time swave time for Q and A.
+However, as I understand, I'm the last presentation.
+So if it goes over a little bit, that's not the end of the world.
+All right oh yeah so these are important.
+So dependency injection and unit testing everything kind of leads to this
+
+all right but we'll start out with solid and we'll start out with Bob.
+This is Bob Bob is happy. Why is Bob happy?
+Because he was told to make a video game so great I'm at my day job I get to make a video game which I'm sure is actually most of us in here right now anyway.
+But so he gets to make a video game.
+6 months later, they end up going
+
+to the testers of Doom. Well, actually they were just regular testers but his product really wasn't that fun when they tried it.
+All right so the players disliked it.
+So what happens is it went back to the drawing board and keep in mind, this is after 6 months of work already went into the programming.
+So changes were requested instead of a rocket ship it was requested that they now use a submarine with a clown.
+
+All right so Bob had problems.
+He couldn't see what these problems were yet, but he knew that they were there.
+They were there starting to build up in the background.
+Let's follow his journey and find out what happens.
+So he would add a new class and suddenly find out he had to make lots of changes all over in his program to deal with this he tried using some interfaces, reusing them but he was finding it was really costly on time in not giving him a lot of reward.
+
+He also ray if I can get a show of hands in here how many people have seen this?
+You update one line and 12 bugs show up.
+Anyone seen more than 4,000 bugs show up because they changed one line I've got a couple of hands here like maybe five or 6 people.
+That's awesome. Okay he would also add new features but this started breaking old ones.
+You know, a lot of these things you're probably thinking to yourself, you've seen this or parts of it or friends who have gone through this
+
+and you're thinking this is just something, part of programming this is what we deal with all the time but that's part of what Solid helps prevent.
+Not completely not 100 percent.
+There is no perfect way to do code.
+There's always some other architecture that will come up and follow the next one to solve problems from the current one.
+But Solid is one of the best standards that I've found today.
+All right he tried extending classes but that broke them
+
+and nothing was testable.
+I want to stress this point because testing also came up a couple of other points.
+There was someone else who worked at Unity Holly who she was giving a presentation.
+You can find it in the, the YouTube videos when they come out but she was also doing stuff on Test Runner and she was making a lot of emphasis to here too.
+But I want to reiterate this I just want to make it sound really important because it is you write a piece of code you change one line in it.
+
+That line has the power to influence every other part of the program whether you realize it or not.
+There's always that thing where it's like, well, of course, it can error out if the user uses it that way.
+That's not what I designed it for.
+So the point is that every time you put a change inside of your code, every time you add a new line, you are putting risk in there that everything can break and you might not find it.
+It might not be part of what you're testing immediately.
+
+So he's got lots of spots where he wrote a couple lines of code and then you can see the fire starting to build up.
+He doesn't see it's behind his monitor and then more stuff is building up.
+Oh, he's starting to see it.
+Okay well, wait, I can deal with it here but he's already put layers upon layers of code on top of that.
+So to fix that error, he has to change fundamental portions of his entire program.
+
+If he had unit testing available, he could have spotted these errors as soon as he wrote the code or almost immediately after having written the code.
+All right so let's get into the bulk of this solid.
+So solid is an acronym means five different things.
+SRP for single responsibility, open, closed Liskov substitution, interface segregation and dependency inversion.
+
+You've also heard the word dependency injection, which we'll get to but they are different and that'll be explained as well.
+Okay so let's get into some of the details.
+So we'll start with the dependency inversion principle.
+It makes sense. We'll start at the bottom of the acronym.
+Remember Bob, Bob would add a new class and suddenly find that there were lots of changes he had to add all over his code to deal with it.
+So let's find out some let's find out why or what was happening.
+
+A lot of you have probably had something similar in your code a class called shot.
+It's a mono behavior. It's dealing with a shot that was fired and managing it.
+It has a piece of information we'll assume there's more but it has damage.
+So this damage is being used all over the place in his code.
+He's got enemy, he's got blast trigger.
+The idea of being an enemy, you know, takes a hit they start taking damage.
+
+You've got your blast trigger which might be a wall or a trap door that opens up if you shoot it.
+And then there's also score because in his system he has this thing to decide how many points you get based on the amount of damage you deal.
+Okay well, that's great that works but in this fix, this repair that he has to do after 6 months after the testers came in
+
+which, by the way, if you have the opportunity to get your testers from day one, that's really where you need to have your programming or your testing right away and continuously through the entire project.
+All right but the testers and everything they decided they wanted to add a rocket shot.
+
+So he created a rocket shot.
+It's also a mono behavior.
+It has damage. It operates the same way as a shot does but it has a few extra features that alter it at some fundamental level of how it moves or its physics or something.
+But the problem is that all these other classes enemy blast trigger score they're all looking at shot they know shot, they don't know rocket shot.
+
+And keep in mind there's a lot of ways you can fix this problem and most of you probably identified and thought of like, oh, yeah, well, we could just do this to fix.
+So we'll get to some of them and keep in mind this is not his solution is not the best solution but it'll work.
+Okay so he starts to try to fix the code.
+He goes around and he sees, okay, well, we've got apply shot damage and he's going into the score and it says shot shot.
+Well, he changes that to expect an object.
+
+So now he can receive objects of any type and deal with it.
+But his code has to look at what type of object it is.
+He suddenly has to decide is shot a shot or is shot a rocket shot and then deal with it appropriately.
+In each case that works his code ran at the end it dealt with the problem.
+But what we're actually doing here is we're hiding problems
+
+we're making it. So if we ever add another shot, we now have to go through this problem of finding all the other places that use it again.
+And now one of them is expecting an object.
+So there's no clear expectancy for that.
+There's nothing to go ahead and say, hey, if you're adding a new shot type, you need to go here, here, here and here to update everything.
+So we've added a chance for more bugs.
+
+So let's take a look at this.
+Bob was looking at the code and someone walked over to looked at over his shoulder and said, wow, whose code are you working on?
+That's pretty bad and he said, yeah and the guy said, why don't you use dependency inversion principle?
+And he said to fix this and the guy's like, yeah, I'll do that.
+You're right that's exactly how we should fix this.
+And then 10 minutes after the guy leaves, he looks it up on Wikipedia which says this
+
+the conventional dependency relationships established from high level policy setting modules independent of low level dependency modules are reversed thus rendering high level modules independent of the low level module implementation details.
+That's pretty obvious, isn't it?
+Yeah I'm getting a lot of this in the audience.
+This is supposed to be a question mark all right so loosely translated, it means user interfaces or abstracts.
+All right so here's what he did to fix the problem.
+
+He ended up creating a single shot behavior that shot became part of same thing with rocket shot it's now inheriting from shot behavior.
+Now this is something of a fairly obvious thing.
+He still has to go through the code and fix the places where it was using shot to now use shot behavior but he won't have to go through this again.
+He fixes it this way once and then every time he adds a new shot, he inherits from shot behavior and all those other classes continue to work.
+
+So dependency injection means don't depend on concrete concrete means very specific instances.
+So you aren't calling out the shot class you're calling out shot behavior, the abstraction of it.
+Also interfaces are ideal but abstract classes work as well.
+And dependency inversion principle in unity,
+
+the unity inspector does not support interfaces.
+Now I've seen a lot of code showing up today where interfaces were starting to be used and I wasn't seeing if that was actually becoming part of the inspector, which would be awesome if it does.
+But so far in my history I haven't seen that work.
+
+And so that means that typically if you want something in the inspector to respect it so you can drag an object over to it and link things up for let your designers link things you have to use abstract classes but that only means if it needs to be designer friendly and keep everything designer friendly.
+I made the mistake of writing code that was all done.
+It was code driven. Scripts would build up everything in the game
+
+and you run into a lot of issues that way because you just throw out designers.
+You can no longer have a graphics person come in, add stuff.
+You can't have other people start to shape the levels for you.
+They all have to come through you the programmer.
+So keep everything designer friendly as designer friendly as possible.
+Okay next principle interface segregation principle.
+So here's Bob again
+
+he went through an experience where when he was reusing his interfaces, it was costly to him.
+It was expensive on his time.
+It took a lot of time for him to build this up and to keep adding this stuff every time he used the interface.
+Now the thing is that most of the time you hear that using interfaces, it can actually save you time you're making code reuse so you don't have to do stuff over and over and again.
+But there's the flip side of that and let's see what he experienced.
+
+He had this idea he had this idea that for his system, he would have almost every object be able to save information about itself so that it could be sent off to the file system to store temporarily to the player preferences if need be sent out to over a UDP connection for some real time video game or sent out via a web service or TCP to get some other type of connection going to that can use it in some other form.
+So to support all of those, he ended up creating an interface called I content I
+
+an ie content IO has a method in there load his string load's object load his generic type load is bit array load is jason.
+But that meant that every time he adds this interface to another class in his code, he has to rewrite functions for every part of that.
+And I know he could write some static class functions to make it a little bit more universal but there might still be some generics, some specifics he has to deal with different in every class.
+
+So that created a lot of work for him.
+And again the guy came over his shoulder and said, wow, that should be fixed with interface segregation principle.
+So he looked it up. ISP splits interfaces that are very large into smaller and more specific ones that clients will have will only have to know about sorry so that clients will only have to know about the methods that are of interest to them.
+Now there's a couple ways to look at this.
+So I'm looking at this from, I'll tell you both aspects
+
+but in general it means that an interface should really only have one member or one member purpose.
+It should have one thing that it's doing only one reason to fail a couple strengths of that you're inside of intelligence and you're trying to figure out which function from this interface do you want?
+Well, there's only two functions or there's only one function that's obvious.
+
+You go to some other classes you load up an instance of it and now you want to find the method that you want and there's a 100 methods inside of it and you have to figure out which one and do you want this method or do you want this method be or do you want this method a string or do you want what is it that you want?
+It takes more time to figure out.
+So you put in interfaces that simplify things.
+So in the spirit of simplifying the interfaces, he starts doing this.
+He goes to his interface
+
+and splits it out into five separate interfaces.
+One that returns string IO, i, string IO, which loads a string another one for i, JSON IO.
+And for the few methods that they actually do need to interact and save to everything he can still have his class inherit from all the interfaces all five of those interfaces.
+So you can have as many interfaces as you want attached to an object.
+But for most of the time he only needs one or two of them.
+All right so ISP use interfaces,
+
+keep everything small and focused.
+So even if you are putting in an abstract class, put an interface in front of that and try to use the interfaces more than you do the abstract or abstract classes.
+And a class can have a lot of interfaces but just the principle of keeping it simple, keeping it small that really helps save your code from a lot of bugs.
+And in unity
+
+remember interfaces are not traditionally supported in the inspector.
+So if you want to actually have something, you have to use the abstract version of the class and you have to tell it use this abstract class to go ahead and reference whatever it is I want.
+However, internal methods can.
+So if you have any framework that's running behind the scenes, you can use interfaces to pass information back and forth to each other.
+And it saves a lot on potential bugs in the future.
+
+Okay next one single responsibility finally an easier one but I was kind of surprised by the Wikipedia entry when I found it.
+Okay so Bob changed one line of code and suddenly there were 12 new bugs.
+We've all gone through this or almost everyone.
+I think there might have been four people in the audience who didn't Okay Bob has his classes one percent of the classes are doing 99 percent of the work.
+
+These are monolith classes they're huge they do lots of stuff.
+In fact, it gets confusing because of the amount of stuff that it does.
+I mean, look at this it's managing hero speed and enemy speed Okay wait a minute it also has a list of enemies.
+So we have enemies we have enemy speed we have health and Max's health is that the hero's health?
+Is that the player's health or the enemy's health?
+
+We don't know. It's not that straightforward.
+We can kind of start figuring out okay well, there's a list of enemies attached to this.
+So that probably means is it the hero's health?
+But we're having to do extra work to figure out what on earth this class actually does or these fields do that introduces more bugs because we might use the wrong thing or use this something that is out there that looks right for the wrong purpose.
+
+So having this code that does lots and lots of stuff introduces more chances for bugs.
+So again, he looked it up single responsibility in Wikipedia, it says every module or class should have responsibility over a single part of the functionality provided by the software and that responsibility should be entirely encapsulated by the class.
+Okay so the general recap of that one is that a clash should only have one thing that it does only one reason for failure.
+
+So when you're writing a class, if it does 10 things that's not following this, you've introduced a chance where there's a lot of overlap, a lot of potential bugs.
+All right so what does he do?
+He ends up going into his code and he starts splitting these things out.
+He makes more he makes more files like unit health and the max health and regular health shows up in unit health.
+And then he's got unit movement and
+
+a smoke manager, enemy manager and all this stuff that's dealing with things.
+He split it out to make it simpler.
+So when he wants to find something, he can look it up.
+Now I will say this if you don't organize your structures in Visual Studio, you will end up with points where you have classes in a single folder and just trying to find sort through that it's a pain.
+So you still have to organize your folders too.
+
+All right so SRP, a class does one thing it has one reason for failure and this also promotes simple classes, small classes.
+So when you just have a couple lines of code, it's a heck of a lot easier to figure out if something's going to error out than if you have a 100 lines of code in a method.
+If you look at a method with 100 lines of code and you can just spot the error instantaneously that was a really bad error.
+All right
+
+and then SRP in unity, think of this like components.
+You can develop a game object by starting to drag in the ability to move where it responds to the character controller and then add gravity or rigid body and then you can add another one to go ahead and deal with point score and another one to deal with power ups and another one to deal with temporary flight boosts or something in your character.
+You can shape your character very easily by applying lots of smaller behaviors to them.
+
+Or you could add one class that does 10 different things or a 100 different things.
+And because of that overlap in code, because that class is doing multiple things, you're going to have lines of code where you change one thing and it changes something else that's completely unrelated.
+All right open closed principle.
+
+Now I'm using a demo in here for this one or an explanation in this one that actually is used in 50 percent of the articles on the web that explain it.
+And the same problem also goes for Liskov's substitution principle exact same problem, exact same solution.
+So I'm going to focus on the differences.
+All right but open closed principle, let's start with that.
+
+So he started adding new features and it started to break old ones.
+Yeah that makes sense. We see that happen.
+So here's exactly what he had.
+He had a class called rectangle shape and it inherited from shape behavior.
+He was starting to try to follow some other principles that he was seeing.
+He was trying to put some abstraction in front of it
+
+and he was thinking okay well, every object or every shape is typically going to have a height and width for the amount of space it takes.
+So that's reasonable. I'll add height and width and then later on he says, okay well, I need to find the area of this.
+Well, all right I will make a separate function or a separate class called shape tools and shape tools.
+I'm going to set this up and make an area function in there.
+So any time we want to, we can just say, hey, give me the area of the shape
+
+we pass in a rectangle and it works the works that's great until they needed a circle class.
+So they added the circle class and the circle while a height and width can still tell you information about it it's really just it', what was it?
+The diameter for height and diameter for width but it doesn't really define what the circle is and it's sure as heck doesn't SU
+
+this does not work for the, for getting the area.
+So we have the height we have the width that's no longer going to work but that's okay.
+He can fix this for OCP for open closed principal.
+He's going in there well, this is not open closed principal yet.
+This is his attempt to fix the problem he goes into here and he says the float doesn't work.
+So let's fix this.
+
+He replaces this with a new method so it's still taking shape behavior just like we had shot before except we turn that he tried to turn that into object.
+In this case he is using a common type between them but he still has to do this call to find out is it a rectangle shape?
+Okay well fine then I'll get the height and width.
+Is it a circle shape? I'll get the radius and I'll do radius times radius times PI or radius squared times PI.
+So that works that does actually work.
+His code will run and
+
+he did this extra step as well to make his code defensive to help it protect itself from error in the future because he's learning a little bit all right and he's throwing an exception.
+So if it, nothing returned anything yet, it throws an exception, a not implemented exception saying that whatever type was passed in is not implemented in shape tools area.
+That's great. That's an awesome error.
+It tells you exactly which class, which method is broken.
+So you know exactly where to go to fix it
+
+except when you don't because you're actually just mocking the player, the second developer who took your code in the form of a DLL and doesn't have access to the source code.
+So if they are going through a DLL and that's how you released it without source or something like that, they get this really clear message that tells them you can't fix a thing that's horrible.
+Okay so let's take a look at OCP
+
+OCP on Wikipedia says software entities, classes, modules, functions, etc, should be open for extension but closed for modification.
+So what does that really translate down to?
+And by the way, keep in mind, there's a lot more nuances than what I'm telling you.
+I'm giving you a really fast version of this.
+All right but once a class is written, you shouldn't have to write it again or you shouldn't have to
+
+change the code. You've already theoretically got unit tests in place or had testers test things about it.
+So you've already got it tested.
+If you change something in that class, you are introducing the chance for that class to fail and all of the tests that happened prior to it to mean nothing at that point and have to be rerun to validate.
+Okay so you should be able to
+
+not have to edit a class but still be able to expand it.
+So what does that mean? How do we apply that?
+Well, first off, we get rid of shape tools.
+There is no way thinking of this as a DL where you don't have source code.
+But even if you do have access to the source code, it's still a problem having to go back in and change a function to change something that's already existed, already tested.
+So he got rid of this and he put area as an abstract method directly under shape behavior.
+
+That means that every time somebody expands, somebody extends the abilities of shape behavior they create a new shape they put it in a new class.
+It now is going to be their responsibility at that time to reconstruct how area works they have to reconstruct it.
+So that means that even if I'm in a DL or I'm using a DL that has the shape tools or shape behavior, I can still get the correct area defined when I add my polygon shape or triangle shape or crescent shape or whatever it is I'm adding.
+
+All right so and this just shows it again.
+So in the rectangle class he's overriding area, does it there in the circle shape he overrides area and does it here.
+So he's actually able to keep his code cleaner and more organized.
+So instead of having this one mass where he has to figure out like all this extra stuff that's just going on with architecture at all, he can now just look in the method for circle shape, find area and there it is.
+
+There's less hoops he has to jump through less chances for errors or bugs to start making their way into the code.
+All right so Ocp, you should be able to expand your code without having to edit the old code.
+You should be able to depend on what was already there unless of course there's a bug that just says flat out that this code does not work.
+In that case, of course, you have to go and you have to fix that.
+All right
+
+Liskov substitution principle as I mentioned before, they dis one and open close principle tend to use the exact same problem and solution, the exact same problem, the exact same solution in half the articles that are on the internet.
+So the one that we just went through for open closed that was the same thing for Liscov substitution.
+So the real problem just becomes well, how is it different?
+What else does Liskovs do?
+So let's find out. All right extending the classes broke them.
+
+He was trying to extend the classes but that still ended up breaking somehow.
+We'll follow the open closed principle with this example but we're going to see an exception otherwise.
+Okay so he has Gameboard and I can't remember the original place that I found it.
+I think it was in an MSDN article but gameboard, Gameboard is the general idea of how he's managing his game.
+He's got a 2D array of game tiles
+
+and he's managing them with a set tile INT.
+He passes in an x and a y and sets the tile and that sets it.
+So that works except they decided what would be really awesome is that they're Penny heaven their bonus levels, their bonus levels are going to be in 3d.
+That adds a whole new element.
+Well, he's like, okay well, this function, this class gameboard 3D it still manages the game board.
+90 percent of the code is still gonna be the same.
+So I'm just going to inherit from Gameboard.
+
+All right so I've got a lot of the functions that cross over except well, that one doesn't give me a 3D array of data so I have to manage that I have to create my own tiles 3D and then in addition to that, I also have to create a set tile function XYZ and pass the tile in there.
+Okay well, this code can work you I'm sure you can see it but this code can work it can work inside the code.
+But
+
+every time he uses this code, he has to fully understand how it works underneath the hood to understand that when he's calling this that he's using it specifically as a 3D gameboard, not the 2D gameboard.
+If he ever passes the gameboard 3D into a function expecting gameboard which he can do it will be looking at the 2D asset it'll be looking at the 2D fields and interacting with 2D which never gets set when you're working with the 3D side of it.
+
+So that's created a whole another chance for bugs to happen because now it's, it's just tiles don't exist.
+You know that you loaded them but they're not there.
+You don't know what's happening.
+So not only is that a bug, but it's one of the ones that become harder to catch.
+So this one is always fun to be able to try to get a nice clear explanation, especially from Wikipedia.
+
+If S is a subtype of t, then objects of type T may be replaced with objects of types ie an object of type T may be substituted with any object of types without altering any of the desirable properties of T correctness, task performed etc.
+Nice and clear Okay naturally he died of confusion.
+All right so what does this mean really?
+What it means is if there are two different types and they have the same base class,
+
+then they should both work as that base class or as that base type.
+So if I inherit from string, I should still be able to pass my class into any method that works with a string and still expect it to work.
+Okay so in this case, Liskov's a little bit different from open closed principle is actually telling us giving us a slightly different rule.
+It's telling us not only when to apply inheritance principles, but it's telling us when not to we need to be able to take game board.
+
+So we take gameboard over here and we say, well, we're not going to inherit from that anymore.
+We're just going to go back to mono behavior and treat this as a whole separate class.
+It's 3D it's not 2D even though in general a lot of the operations are the same.
+That doesn't matter. The code is significantly enough different that if you tried to use them interchangeably, it would not work it would error the code.
+
+All right so LSP, you need to be able to trust whatever type you're using as whatever base type it is.
+If it says it's a string, it should operate as a string and you shouldn't need X ray glasses.
+You should never have to look at the source code of a class to understand what it does or how it works in general.
+
+You shouldn't need to understand what you need to or well, yeah you do kind of need to know how to wire it up but you shouldn't have to look at it to realize that you can't use the 3D tile in the 2D system.
+All right now we're into the area that I like the best and wow, this actually ran fast cool dependency injection.
+So first thing, dependency injection is not dependency inversion.
+It depends on it. There's a lot of dependencies here
+
+but DI, which is what I'll call it from now on DI does not depend on or does not is not dependency inversion.
+So dependency inversion says things like we can have classes or we want to be able to operate against the interface or the abstraction, not the concrete type.
+We don't want shot we want shot behavior or we want I shot behavior we want to, we want to use that because that can be replaced.
+We can do a new class to replace it in our code without ever having to change the old code.
+
+We don't have to retest it we don't have to alter the existing test cases.
+They'll all still work but that's kind of a weakness in solid because those objects still have to be constructed somewhere.
+So if you're creating shot, you still have to say somewhere in your coach hey create shot give me an instance of shot and that has to create it at that point you can pass it to an interface and use it and you can follow the rest of Solid.
+But there there's no special handling for how you construct.
+
+Dependency injection takes it that next step where it says I don't want my class to know which one it's constructing.
+If I create a DLL that has this whole game in it and then someone else creates this DLL, plug in for it they should be able to override shot and put in their own shot there.
+So every time someone constructs a new shot, it uses theirs instead of mine.
+All right so one of the cool things about this is that instead of saying equals new gameboard
+
+and this is a snippet of code from the actual video game that I'm going to reference in a minute.
+Instead of saying get board equals new gameboard, they're going to say it equals diget I gameboard.
+DI will take care of constructing it and dealing with the construction of it.
+Ninject is a common framework that actually deals with this kind of stuff.
+For the Dotnet side, it doesn't work in unity because
+
+almost all injection systems don't work in unity unless you specifically design them to it because unity needs to control the constructor.
+I'll explain why in a couple minutes but I do want to point something out down at the bottom there is this link.
+Don't worry you don't have to rush to get it written down or anything if you want to but it'll be on every slide from here on out.
+
+That is a reference to a set of code that's in GitHub right now.
+So you can see source code for a dependency injection system that works for this.
+An example project of that was written originally in unity and then using unity standards all the scripts just sitting inside of there no solid or anything like that.
+And then also using solid dependency injection and unit testing
+
+and it's the exact same game you run it and visually it's the exact same experience for the player and that's an example.
+It's just a chain reaction game.
+In the chain reaction game, you click an object of one color and it starts a chain reaction to all the touching objects of the same color.
+So fairly basic game kind of fun to play clicking the yellow in the corner and all of a sudden they all start vanishing.
+It's kind of fun all right
+
+so another thing that dependency injection does that's really awesome.
+Dependency injection has the word injection in it.
+Injection means that you shouldn't have to do it.
+It will inject things for you.
+What does that mean? Well, instead of saying I gameboard equals new gameboard, we're going to say public I gameboard get set a property that we do nothing to set and dependency injection system will do it for us when the object gets constructed
+
+in this framework you can look at all the source code of how that stuff works but I'll explain a few more things of how to use it if you want to try it out.
+All right so one of the things to be able to get to dependency injection is to use Visual studio and create DLS.
+Except that's not you can actually still do this all inside of unity directly
+
+but I am showing the point of getting this inside of a visual studio and starting to build as DLLS because that gives you unit testing and much faster control over all your testability and easier testing in my opinion, at least to be able to run all that stuff.
+Now if you do, you just create a DL in unity or in visual studio and then you go to the properties of it and you can choose which base library of unity you want to use
+
+already has it used to just be you had to select unity or Dotnet 3.5 or Dotnet two and understand which classes and methods you couldn't actually use when it got back into unity.
+But now they actually have this all defined out.
+So you can just choose which one you want.
+If you're going to the web, then unity 35 web based class libraries or whatever is out there now.
+So unity support works really well inside a visual studio okay chain reaction is split into several libraries, several
+
+assemblies and you have control over them, a couple of them.
+So behaviors lib and lib test.
+The ones that you don't typically control are IOC, which is where the dependency injection framework lives and then unity base, which is actually where we have a series of wrappers to take control over game objects in unity and transforms and all sorts of other objects that you'll use in unity.
+So you can actually take advantage of a dependency injection system
+
+okay so the ones that you do get to use this is a new structure of taking a look at how you format your unity project.
+So there's a couple of small layers or large layers however, you look at it, the behaviors this is like your views typically in a view like an MBC model for game development your view doesn't really have the logic.
+It doesn't understand the base principles of how things work in the game does understand how to show things.
+It understands logic of
+
+if I'm moving faster than X speed, then start adding sparks or some other effect but the game logic is held separate.
+So in this first of all, view models are typically treat as scriptable objects.
+If you haven't worked with scriptable objects, there is a really awesome video on it from one of the 2016 Unite Stuff
+
+presentations that you should check out on YouTube.
+It's phenomenal and you should start using it but that's really about setting configurations that you can swap easily in the inspector and then views.
+These are the objects that we're using inside of the game.
+So we have a ball, we have fade reactor, we have the game, we have mouse manager, reactor base and a bunch of other stuff.
+
+So these are our classes they are controlling this stuff.
+They actually have mono behaviors attached to them sort of okay so instead of monobehavior, any class that we use uses inject behavior and you've got the source code for this.
+So it's actually just an abstract class that inherits from mono behavior itself and then does its own steps to deal with the injection.
+
+So a couple of things that stand out about it is we've got game controller in it, which is an eye game controller we're setting that is get set.
+Well, what does that mean?
+That means as soon as this gets constructed, the DI system, the dependency injection system is going to run through find game controller, see if it has a list or something bound to it and it'll just put it in there for you
+
+it'll find the real reference to it and just throw it in the code.
+So your class no longer cares about how it needs to find it or any details about how it finds it it just asks for it and it's, it appears it also has another one game configuration.
+This is one of the scriptable objects I was talking about.
+
+That one gets set on the unity side which means that unity is going to do that.
+And once you get to the start function, that's where it shows up.
+So I wanted to show you a couple of things that go into this.
+So and to get to there anywhere in a library, in an assembly like the behaviors assembly, the lib assembly, there will be something that inherents eye bindings configuration.
+
+And basically what happens is the first time you ask, you call on dependency injection.
+It's going to go through every assembly, find every class that is an eye binding configuration, order them and then call the setup function.
+So all you have to do is just put a class in there.
+You don't reference it anywhere you just put the class in and it'll find it when it starts.
+So in this one we're saying I ball controller now references a singleton
+
+to ball controller. And what singleton means I'll get to in a couple of minutes.
+But we're also dealing with game controller and mouse manager so we're wiring all these things up.
+So anytime something asks for it, it will get the instance.
+We're defining what instance it is.
+So what does this mean for solid?
+This means that in solid if we want to change something out, we don't have to go to that specific class and start altering the class.
+
+We can now make a new instance or a new type of that class that inherits from the same interface and rebind it.
+So we can test with an entirely new class and not destroy all our old code.
+
+Okay, important note dependency injection does not work well in unity.
+I mentioned this earlier and that's because unity needs to control the constructors.
+And if you haven't seen this, there's some other unite presentations that deal with this as well.
+But there is a Dotnet side and a C plus plus side.
+The C plus plus engine can be dealt with a little faster and has a lot of different reasons for why they do this.
+
+But it has two sets of objects for each every object we create at least on the components something inheriting from unities collection of objects and then we've got the Dotnet object.
+So what does this mean? This means that they need to control the constructor.
+That's why we don't get to.
+They have to wire up their objects.
+So when they construct the or when we tell them to give us a new behavior, they are constructing a C plus object and a dotnet object and linking them together.
+
+That's what they're doing how they do it and why all the details I don't really know but that's the nature of how it works.
+So what does this do? This means that if you're not inside of the unity engine executing and the unity DLL does not count as the unity engine.
+But if you are testing in Visual studio for example, it doesn't work because you don't have the unity engine side running.
+If you are testing with Ninjak or if you're using Ninjak to construct it, it can't
+
+it's not designed to handle it and you can hack it, you can get it to work.
+But in principle, Ninjak is not designed to keep a static reference of itself open which is one of the things that we have to do in unity to keep everything working all right.
+And of course, the dependency injection system, as I mentioned, comes with a collection of wrappers to already deal with certain things like game objects and stuff like that
+
+a scene manager so that you can call on this and make it an interface that you can interact with in your class instead of an actual having to deal with the scene manager.
+Those wrappers are how we make this unit testable.
+Now one thing I'll point out is this doesn't have all the classes in unity and so if you want, if you, if you use it, you'll find that there's a bunch missing and you have to end up putting them in if you're going to use it.
+There's a big reason for that.
+
+I have a component I have an asset on the asset store right now and it only works in one specific instance of unity like version 54, something or whatever.
+And that was one where it actually has interfaces and wrappers for every single class, every single method inside of unity.
+And I actually wrote code that started to strip all the information out through reflection and actually build up a whole new set of code to do this and I had to hack a few pieces together to make it work at the end.
+
+But every time that a new version of unity came out, there were some minor portions of it that would change and the code just literally would not compile every time new versions of unity came out.
+So ideally what I say is that if you do this, if it's not there, you add it but otherwise don't get ahead of yourself don't start adding the 100 functions that might be sitting inside of one of the unity objects.
+Only add the ones you need
+
+and then it only takes a couple of minutes to add a wrapper for something.
+Okay so this is that same class that I was looking at earlier where we have this game controller.
+We have this game in unity.
+It's monobehavior or what was it injection behavior and inside of it as soon as the constructor fires as soon as the constructor fires, it binds itself as a singleton it binds itself so it says anytime anything else now asks for eye game, give it,
+
+give me to them give this class or this instance of that class.
+So unity constructed it we still have the scene or this game object in the scene inspectors or editors, designers they can still work with it and unity created it they now have it available so anything else can use it.
+And then also we have the start method.
+So remember that we have this configuration that I had mentioned a little bit about before that earlier that configuration element
+
+that's set by unity so that's not available until a start method gets called.
+So as soon as a start method gets called, I add that and that's how we get scriptable objects to work in this as well to start transferring information over.
+Okay so I mentioned before I'd tell you how singletons work.
+There's a couple binding options that work in this system.
+One is binding is a singleton which basically means static.
+
+It's a constant reference.
+It's always there you ask for a reference to ie game it'll give you the same one every time you ask for it.
+So the exact same memory, exact same reference point.
+And then there's also conversion because sometimes we have to do extra work to wrap things.
+So if we want to get a transform out of unity and into our game logic,
+
+we actually have to call it conversion.
+Remember how I said that unity takes when you want to construct a new object unity builds itsnet object and then builds your C plus object.
+I don't know the order, but it does both of those and then wires them together.
+We do the exact same thing.
+We take your dotnet object we let unity construct it and then we put it inside of a wrapper.
+
+So that's what the dependency injection does and it uses a conversion which is basically a method that gets called so that gets wrapped up inside of there and then you can bind to a type which basically just says any time that you ask for this give me a new instance.
+So if I set that to shot for instance, I could have a 100 different instances of eye shot running around in the game.
+All right and
+
+this is an example of some of the code that's actually inside dependency injection.
+We're going to get to unit testing in just a second.
+But dependency injection, this is one of the methods.
+This is inside the ball controller of the game that game that you were actually seeing on the screen a few minutes ago.
+We're passing in a reference, an interface for ball,
+
+not the actual ball object itself an interface and we're working with game kinfig.
+We're getting game Kinfig from this and we're also getting a list of additional ball references from the, from the game controller that we just got.
+So we've got all this information that we're starting to get and we're just using interfaces.
+We're not calling on anything from unity directly which means our logic is completely separate.
+
+Anyone see a fault with that for on my screen a point where I actually am using unity code raise your hands anyone yeah vector three distance yes I'm using vector three ddistance in this that is a unity function but vector three and, and all the other structs in the system they don't have a mirroring dotnet or C plus component at least not one that's as tightly coupled as what we find with game with monobehavior or transform.
+
+So because of that we can actually use some of those objects.
+We don't have to rebuild all the functionality or wrap all the functionality of vector three which is great that saves us a lot of work.
+Okay so unit testing last spot nothing was testable.
+Remember this problem the last one of the problems Bob was facing.
+So the idea is that remember, and I'm trying to drive this home strongly that any time you put in a line of code, any time you make any change,
+
+all of your testing, everything that you have checked is suddenly invalidated.
+Everything because you've all seen this where you do something in one spot of code and it changes something else and it takes you an hour to figure out why did that even affect this?
+Because our code is interrelated it all talks to each other through this giant web of code.
+So the point is that
+
+you may think you're doing a really good job, that you're being very careful with your code but it's still not guaranteed.
+You push it into production because it's like oh, I just need to change this one little thing push it out to production as soon as it's out there you're like, oh crap that broke this you didn't even think about it but that's what happened.
+
+So and the especially notable is when you make a change in code and all of a sudden it's like three months later before the point that you actually start depending on that code in a certain way that breaks it.
+And by that point you have so many layers that doesn't really matter.
+You have to throw out half your architecture and start to figure everything out again because it just doesn't work the way you wanted it.
+
+And I'm sure you've seen that too where all of a sudden it's just like there's some error that comes up that I have to throw out a decent amount of work because it just doesn't work the way I wanted it to.
+It wasn't efficient, it wasn't effective it wasn't fun all right so test all the things.
+This is awesome. You can test a 100 percent of your code not true you can test all of your game logic.
+100 percent of your game logic can be tested and you can get code coverage
+
+but the views and the view models remember that's actual mono behaviors and scriptable objects.
+For that you use Test Runner.
+And that was part of one of the other presentations that was given earlier today that I got to see and that was awesome.
+But the test Runner lets you test behaviors in unity
+
+but the behaviors that takes extra work you have to do extra cleanup.
+It actually has to load in a visual environment so it can render and process all these objects and you're not really testing isolated things.
+So every time you try to test something in there there's probably a dozen lines of code at least that it's affecting.
+So when you find an error with it, it could be a lot wider of a problem it could be hiding in a lot more places.
+Unit tests on the other hand, are testing one method
+
+they're testing one method, testing one set of expectations against it for one set of results.
+So with that, you know exactly which method, exactly, which class, exactly, which part of it you're trying to break or guarantee works.
+And also with testing and especially in visual studio, you get mock frameworks what does that mean?
+You can mock an interface so you don't have to create this fake testing class for all of your interfaces.
+You can just say, hey, mock I game controller
+
+and it will create this fake object that does what you tell it you can tell it oh, there's this material name that's in there.
+Okay well, any time it's ask for, someone asks for material, say it's red and you can set that and this object will then act like that interface for your test cases.
+Now here's an example from the unity solid project again, link is at the bottom.
+
+So in this one I'm using a triple A method of testing.
+When I say triple A, I'm not talking about triple A games, I'm talking about arrange act assert so you'll see that in here starting with a range but I also want to point out I'm testing the ball controller and I'm calling it testing the method start reaction.
+Now I'm putting an underscore and then I'm saying I'm giving it.
+What is the expectation?
+
+Well, the expectation is I'm giving it one ball with the material or that's what I'm arranging and then how do I expect it to respond to that?
+How do I expect it to respond to this environment this configuration?
+Well, if I'm giving it one ball with a material, I expect it to trigger a reaction for that ball just one ball, no others.
+And what's really cool here is I'm actually using the mock framework right now but I have, actually, I can zoom in no, go back,
+
+go forward there so I can zoom in on this and you can see I'm using game controller here but I'm not the real game controller it's just a mock of it.
+So it created this fake one for me.
+And then I have some helpers in here.
+I created a helper function which that's kind of covering up I've created this helper function and inside of that I tell it, hey, create a list of 10 different balls in here and so it does, it creates these and they're all interface based they're all mocked out they're fake
+
+and I'm telling it, okay, take that list and now give me set them in a row, one meter apart each and we can make the assumption all of these are one meter in size or one unit in size and set all material names red except take this first one.
+And we remember we're just working with this mocked version of this ball list.
+
+We're taking the first one and we're changing one of the get properties.
+We're saying hey, find the property called material name and any time someone calls it have it returned blue.
+So visualize this for a second I just set up the game board and I have the bottom row filled in with 10 different balls or 10 different elements in there.
+All of them are red but one of them is blue.
+I just created this visual example entirely in logic without touching the real unity code.
+
+That means that this test can run inside a visual studio.
+It can run where it takes milliseconds where I don't have to create render scenes I don't have to load a test scene I don't have to load 3D objects and all the behaviors associated with it.
+I can test just this one thing.
+Now here's the cool thing after I have set up this game controller and I've filled in all of these settings about it, all the stuff that's going on in the game
+
+I then bind it back to I game controller to the object from that mocked version.
+So now anytime anywhere in the code asks for the game controller, it is going to get this version.
+And remember dependency injection is loading all this stuff for us.
+So what does that mean? That means when I'm loading the ball controller and the ball controller has its own reference, it's going to try getting to game controller it's getting this one,
+
+it gets this one. So my testing becomes really easily.
+It's isolated to here I don't have to do all these extra classes and all this extra work to get it to work except for maybe a ball helper to simplify it, some other helper methods.
+Okay so moving on in there the last part of that test for the arrangement is that I tell it, okay, go construct a ball controller.
+
+I never mocked out the ball controller.
+I'm getting the real class for ball controller.
+When dependency injection gets, it goes to the property it sets that game controller that we put in there and then we tell it to act.
+This is that AA part arrange we've arranged the test we've arranged the environment as we need it to happen or as we need it to be and then we act on it.
+The action was calling that method from the ball controller start reaction
+
+showed you the method a little bit earlier and showed you that's what this test was called or starting with.
+And then I passed in the ball list so it's got this or sorry, not the ball list but that first ball, the one that was blue.
+So the way this works remember it's a chain reaction game.
+You click on one ball and it'll find all the touching ones that are next to it and then destroy them in, you know, some interesting way shrinking, fading, whatever, and with a time delay between each.
+
+So what we're going to do is we're going to say hey, this mock fade, which is the destructor I had set up for it to make them fade out was activate destruction called and was it called only once?
+We are verifying it so we just verified that the activate destructure was called only once even though there are 10 balls all in a row that should have been able to work or should have been able to blow up
+
+except for the fact they're different materials.
+I just tested a real end game instance without ever loading unity.
+Let me show you something really cool.
+This is the time it took to run it.
+The first one took 368 milliseconds.
+I would say that might be partially just to getting visual studio loaded.
+Sometimes there's still extra things going on on threads that slow down the first test or two.
+Second one 46 milliseconds,
+
+milliseconds for an entire instance of a game test where it loads stuff up that is fast and the code, it's just straightforward it's code and if you write this as you're doing it, it becomes easy.
+Sure the first one might take you an hour or two just to kind of figure out, get your feet wet, make it work.
+But then once you get that going, it only takes a couple minutes to start adding another test case another instance.
+
+It becomes really simple and really easy especially when you're following solid and you have simpler classes, simpler methods, less stuff that they're doing.
+The unit tests become easier and then you don't have to worry as much.
+You make a change in your code okay great I'll go hit the test.
+Runner runs all the code it's back in like 30 seconds.
+Everything worked except for this one thing.
+So okay, that
+
+not only did I see what was wrong check out the name it's a start reaction.
+So I know exactly the method I know exactly what I was trying to do and I know exactly what reaction failed.
+So I have a very clear path to see the entire way.
+So I just click on that it takes me into the code and I can fix stuff really fast and easy or at least identify where the problem originated or seemed to originate.
+Okay so second to last slide, I have two minutes left.
+Cool.
+
+So this allows your code to now run in standard build servers like Mstfs, Perforce Git and you can use continuous integration on those.
+They can run the end unit tests or MS test and you can use either they both work and just about any other test framework that you can use in visual studio they work.
+And my test framework, by the way, is written in Dotnet 6.0 or Dotnet 4.6 sorry so it's using the latest Dotnet version
+
+and because the test cases itself that's going against my library that doesn't really have all this tethered control from unity, it gets to use whatever framework I want to.
+I can use the latest Dot Net code for my test.
+So I can enjoy some of the faster features to be able to get stuff out.
+It also gives you metrics like code coverage.
+You can see how much code are you actually hitting when you're testing this.
+
+You can also get performance on each part of that.
+So you can break it down and see this method.
+And this loop inside of this method suddenly took 30 seconds while the rest of it took or 0.1 seconds and 30 seconds for any method to execute inside of a game is usually a very bad thing unless you're downloading an update on another thread or something.
+All right so your time for testing is shrunken.
+We're talking about seconds here, milliseconds.
+
+And usually you can just run a test suite that's against your specific area.
+So you say all the tests against this class that I'm editing and before you check in, you run the full test suite that might take a minute or two and you get back all the information right away.
+And of course, depending on where you're checking it in, you also get all the information back from the server.
+So the server can send an email to your team saying hey, Bob broke the build again.
+
+All right so rule of thumb, if the test is hard to put in there if you're trying to do a unit test and it's becoming really difficult because you have to get this object faked out somehow and get it to pretend like you have access the file system but you don't want that because you're actually testing it on a server so it'll break everything and then it's got to load up this object and this object and this object and you have to come up with some artificial way to do all that.
+
+Then you're not actually following Solid.
+Unit testing is really easy when you start following Solid.
+Okay and help wanted. This is open source on Git Hub.
+I started it about a year ago, uploaded it a few months ago but it's been in use in a couple of major projects.
+I can't say who or where, but think a large amusement parks that'll start having some of this stuff coming out in a few months.
+The,
+
+but I could use help on this people anyone who wants to get involved, just try it out, even experiment with it yourselves.
+If you don't want to just apply, you can apply Solid without having to use this.
+But if you want the unit test, the dependency injection and unity, then get it from here and help out anyway you want to, we could use documentation, we could use expansion testing, all sorts of stuff.
+All right and then,
+
+so if you want to use that's, here's the link to that.
+If you want to connect to me, here I am on LinkedIn Unity Connect and also that reference to creating your own real time strategy game I mentioned before there's a link to that as well.
+And I do want to also thank Edge Experiential, the company I worked for since I started there it's been all Unity 3d.
+They're doing lots of stuff with holographics and VR and just major, major stuff
+
+and it's been a lot of fun.
+If you have questions about that, feel free to ask me.
+Specifically I want to give a little bit of thanks just to Vitali, who did the design on a lot of these pages and Sarah and Matt because they sat through with me to kind of go through and try to make this presentation good.
+And then I also want to thank my wife because she's pregnant right now and she's staying home with our toddler so that I can come here and have fun at this presentation.
+
+All right so the floor is open to questions but please use the microphone so anyone watching on YouTube can actually find out what they were.
+
+That was cool. Does Unity Solid work on a VS for Mac or is it just visual studio on Windows?
+
+I'm not 100 percent certain but it should operate on anything that runs dot net code.
+So so far I've seen it, it seems to have worked in everything I've tried it in.
+
+Hi I wonder how much overhead and complexity using this principle will add to the real game
+
+that's a really good question.
+So how much extra work? How much overhead plus performance and performance?
+Good question. Okay so to answer the first one, how much did it actually take an overhead to build it?
+And to be honest, if it's your first time doing it, it's going to suck just like learning almost any technology.
+Don't do it for your real project.
+Make a proof of concept first kind of experiment go through like a sample where you take one of your old video games and convert it to solid.
+
+Do something where you practice solid first don't just try it because if you don't get all the little parts of it, right?
+It does start to make things complex and if you're using it wrong, it can get ugly but when you use it, right it's this great experience of faster, simpler code regarding the speed, the issues that we run into with performance Honestly we did not notice any.
+Now I'm not going to say I was not working on any triple A games with this.
+This was being used
+
+it was being used for some intense stuff.
+We had like 24 machines that were all networked in real time doing all sorts of stuff simultaneously but it's, we didn't notice any performance degradation from it but I can't say that we actually ran it through any major specs.
+
+All right Thank you.
+
+Hi you said you're doing a bunch of VR work now I was wondering how your testing workflow works in VR how you could even simulate the user interaction in VR or you know, find weird bugs that happen when the user tries to do something crazy in VR.
+
+Sadly, I can't say that I've tied it into VR directly.
+We've used this on several projects but we haven't used it on the VR ones yet so I intend to and I hope to have some better answers for it and even some demos to go up on Git Hub.
+But for right now I can't actually respond to that yet.
+
+Regarding you said you haven't had any major issues with this.
+Are you also referring to the project that you just had with the 24 connected computers?
+
+Oh, we haven't run into saying that.
+Can you ask a question
+
+The last project you said with the 24 connected computers you said this system hasn't run into any problems when you were running that one?
+
+No, no I mean occasionally we run into issues where someone who doesn't have a solid background jumps onto the project and then they're going to have some complications trying to figure it out.
+
+Okay what if there was a single developer?
+
+If it's a single developer?
+I mean, well, one of my rules of thumb is if you can develop it in two weeks and be done with the project great don't worry about any special framework just hardcode everything, do everything to get it done and just get it out the door like a proof of concept.
+But anything larger anything you think you might come back to in 6 months or hand off to another developer.
+
+You really want to have some sort of intelligent framework sitting on top of it that other people can go to find standards online on how they're supposed to work with.
+
+Well, it's been 6 months and we're still working on it.
+So thanks. Dan.
+
+Oh, yes so I thought it was pretty creative how you took MVVM principles and applied it to unity.
+I haven't quite seen it that way before.
+I mean we came from a typical Windows background.
+I know that's common there but anyways in regards to solid, you mentioned that you use single responsibility and you try and tie it to components, game objects.
+But do you have a best practices for how to interact in between game objects that are in the hierarchy especially like in the editor?
+
+Well, yeah for one, I mean you create fields to go ahead and tie them in at any point where you're going to have a designer with the ability to carry things over.
+You take that I'm sorry anytime that you have a designer that you want the designers to be able to pass stuff.
+So you're talking about hierarchy, architecture, your view model, the game, the stuff that's actually the mono behavior that can carry objects into it.
+
+So you can just have the, you can set up a field that says, hey, use this type of monobehavior, this abstracted version of it for instance and you can just set them or have it say, hey, go through my children and find out what types of objects I have in here and pull out all the objects of this type.
+OK so you can still use all those things from the mono behavior itself and just use all the standards inside of it.
+
+Okay and I don't know if there's another with the test runner example that you used that you were doing that entirely in visual studio, not using Unit's unit tester.
+It looked like it looked like you were using visual studios.
+So do you get issues when you're building new builds in Unity?
+Does it mess up the solution and lose references to those tests or does it just maintain that?
+Or
+
+well, the tests have nothing to do with unity's test runner.
+So with that there is no test runner solution in there at all.
+It is like you mentioned, it is a 100 visual studio for the unit test.
+That one I don't remember if it was MS test or any unit I think I was using any unit for.
+Okay but yeah it's completely separate and there were no issues that I found in being able to maintain that reference.
+
+It's basically the view or the, I want to say the view the monobehavior's job to go ahead and tie those together.
+
+Okay thank you
+
+welcome all right Any other questions all right Well have a good Terbone.
+
